@@ -27,9 +27,7 @@ import {
   getCountFromServer,
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
+// Web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBVfmqVa1rjyzOSniwMFDq9ub3OJ3zdoCQ",
   authDomain: "login-with-firebase-data-d62bc.firebaseapp.com",
@@ -98,7 +96,7 @@ function updatePoint() {
         level: level,
       }).then(() => {
         console.log("Veritabanına kayıt başarılı.");
-        window.location.href = "/html/TrainPage.html";
+        window.location.href = "/pages/trainPage.html";
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;

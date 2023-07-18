@@ -101,7 +101,7 @@ window.register = () => {
         level: "A1",
       }).then(() => {
         console.log("Veritabanına kayıt başarılı.");
-        window.location.href = "/html/New.html";
+        window.location.href = "/pages/new.html";
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -147,7 +147,7 @@ window.login = () => {
       update(ref(db, "users/" + user.email.split("@")[0]), {
         last_login: dt,
       });
-      window.location.href = "/html/TrainPage.html";
+      window.location.href = "/pages/trainPage.html";
     })
     .catch((error) => {
       const errorCode = error.code;
