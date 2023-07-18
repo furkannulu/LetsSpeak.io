@@ -50,7 +50,7 @@ window.logout = () => {
   console.log("Çıkış");
   signOut(auth)
     .then(() => {
-      window.location.href = "/html/LetsSpeak.html";
+      window.location.href = "../index.html";
     })
     .catch((error) => {
       alert("hata" + error);
