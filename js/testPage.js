@@ -96,7 +96,9 @@ function updatePoint() {
         level: level,
       }).then(() => {
         console.log("Veritabanına kayıt başarılı.");
-        window.location.href = "/pages/trainPage.html";
+        setTimeout(() => {
+          window.location.href = "../pages/trainPage.html";
+        }, 5000); // 5 saniye
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -112,6 +114,7 @@ function updatePoint() {
 // HTML ITEMS for Form Page
 const sentenceItemForm = document.getElementById("sentenceForm");
 const startButtonForm = document.getElementById("startForm");
+const nextButtonForm = document.getElementById("nextButton");
 const outputForm = document.getElementById("outputForm");
 const resultsForm = document.getElementById("resultsForm");
 const displayPointForm = document.getElementById("displayPointForm");
@@ -174,7 +177,10 @@ function getSentenceforTestForm() {
     var average = totalPoint / formIndex;
     displayPointForm.textContent = Math.round(average);
     updatePoint();
-    return (sentencesForm = ["END..."]);
+    nextButtonForm.disabled = true;
+    return (sentencesForm = [
+      `Your point is  → ${Math.round(average)}. Please wait... `,
+    ]);
   }
   return 0;
 }
@@ -257,8 +263,6 @@ const recognizer = new recognition();
 recognizer.lang = "en-US";
 
 startButtonForm.addEventListener("click", () => {
-  outputForm.value = "";
-  resultsForm.value = "";
   recognizer.start();
 });
 
@@ -266,6 +270,7 @@ recognizer.onstart = () => {
   startTime = new Date().getTime(); // Kaydın başlama zamanını al
   console.log("Speech recognition service has started at : " + startTime);
   startButtonForm.disabled = true;
+  nextButtonForm.disabled = true;
 };
 
 recognition.onspeechstart = () => {
@@ -289,11 +294,19 @@ recognizer.onend = () => {
   endTime = new Date().getTime(); // Kaydın bitiş zamanını al
   console.log("Speech recognition service has stopped at : " + endTime);
   Correction();
-  startButtonForm.disabled = false;
+  nextButtonForm.disabled = false;
 };
 
 outputForm.addEventListener("click", () => {
   outputForm.blur();
+});
+
+nextButtonForm.addEventListener("click", ()  => {
+  outputForm.value = "";
+  resultsForm.value = "";
+  nextButtonForm.disabled = true;
+  startButtonForm.disabled = false;
+  sentenceItemForm.textContent =  getSentenceforTestForm();
 });
 
 // ############################### Puan Hesabı ve Accuracy Kısmı ###############################
@@ -386,7 +399,7 @@ function Correction() {
   resultsForm.value += "Akıcılık Puanı: " + fluencyScore + "\n";
 
   totalPoint += fluencyScore + wordScore;
-  sentenceItemForm.textContent = getSentenceforTestForm();
+  // sentenceItemForm.textContent = getSentenceforTestForm();
 }
 
 function wordAccuracyPoint(incorrectWords, correctWords) {

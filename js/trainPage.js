@@ -397,12 +397,13 @@ getLevel()
       console.log("Speech recognition service has stopped at : " + endTime);
       Correction();
       nextButtonForm.disabled = false;
-      //
+
     };
 
     outputForm.addEventListener("click", () => {
       outputForm.blur();
     });
+
     nextButtonForm.addEventListener("click", () => {
       outputForm.value = "";
       resultsForm.value = "";
