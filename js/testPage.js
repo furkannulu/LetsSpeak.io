@@ -69,22 +69,22 @@ function updatePoint() {
       let level = "A1";
       var userPoint = parseInt(displayPointForm.textContent);
       // Bu kısımda ekranda bulunan yıldızlar puana göre düzenleniyor.
-      if (userPoint >= 0 && userPoint <= 15) {
+      if (userPoint >= 0 && userPoint <= 30) {
         level = "A1";
         document.getElementById("A1").checked = true;
-      } else if (userPoint > 15 && userPoint <= 30) {
+      } else if (userPoint > 30 && userPoint <= 50) {
         level = "A2";
         document.getElementById("A2").checked = true;
-      } else if (userPoint > 30 && userPoint <= 45) {
+      } else if (userPoint > 50 && userPoint <= 70) {
         level = "B1";
         document.getElementById("B1").checked = true;
-      } else if (userPoint > 45 && userPoint <= 60) {
+      } else if (userPoint > 70 && userPoint <= 80) {
         level = "B2";
         document.getElementById("B2").checked = true;
-      } else if (userPoint > 60 && userPoint <= 80) {
+      } else if (userPoint > 80 && userPoint <= 90) {
         level = "C1";
         document.getElementById("C1").checked = true;
-      } else if (userPoint > 80 && userPoint <= 100) {
+      } else if (userPoint > 90 && userPoint <= 100) {
         level = "C2";
         document.getElementById("C2").checked = true;
       }
