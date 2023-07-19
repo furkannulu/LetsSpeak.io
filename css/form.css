@@ -118,7 +118,7 @@ body {
     border-radius: 25%;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    margin: 10px;
   } 
 
   button:hover {

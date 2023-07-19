@@ -240,52 +240,52 @@ const C2 = [
 ];
 
 //------------Cümleleri Eklemek İçin---------------------
-window.onload = (e) => {
-  e.preventDefault();
-  const sentencesByLevel = {
-    A1: A1,
-    A2: A2,
-    B1: B1,
-    B2: B2,
-    C1: C1,
-    C2: C2,
-  };
-  for (const level in sentencesByLevel) {
-    for (const sentence of sentencesByLevel[level]) {
-      const sentenceRef = doc(db); // Yeni bir belge referansı oluşturun
-      getDoc(sentenceRef)
-        .then((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            console.log(`"${sentence}" already exists for level ${level}`);
-          } else {
-            //Save Form Data To Firebase
-            setDoc(sentenceRef, {
-              sentence: sentence,
-              level: level,
-            })
-              .then(() => {
-                console.log(`done`);
-                //alert
-                //clear form after submission
-                document.getElementById("clearForm").reset();
-              })
-              .catch((error) => {
-                console.log(
-                  `Error uploading "${sentence}" for level ${level}:`,
-                  error
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          console.log(
-            `Error checking "${sentence}" for level ${level}:`,
-            error
-          );
-        });
-    }
-  }
-};
+// window.onload = (e) => {
+//   e.preventDefault();
+//   const sentencesByLevel = {
+//     A1: A1,
+//     A2: A2,
+//     B1: B1,
+//     B2: B2,
+//     C1: C1,
+//     C2: C2,
+//   };
+//   for (const level in sentencesByLevel) {
+//     for (const sentence of sentencesByLevel[level]) {
+//       const sentenceRef = doc(db); // Yeni bir belge referansı oluşturun
+//       getDoc(sentenceRef)
+//         .then((docSnapshot) => {
+//           if (docSnapshot.exists()) {
+//             console.log(`"${sentence}" already exists for level ${level}`);
+//           } else {
+//             //Save Form Data To Firebase
+//             setDoc(sentenceRef, {
+//               sentence: sentence,
+//               level: level,
+//             })
+//               .then(() => {
+//                 console.log(`done`);
+//                 //alert
+//                 //clear form after submission
+//                 document.getElementById("clearForm").reset();
+//               })
+//               .catch((error) => {
+//                 console.log(
+//                   `Error uploading "${sentence}" for level ${level}:`,
+//                   error
+//                 );
+//               });
+//           }
+//         })
+//         .catch((error) => {
+//           console.log(
+//             `Error checking "${sentence}" for level ${level}:`,
+//             error
+//           );
+//         });
+//     }
+//   }
+// };
 
 //----------------------Silme-------------------- !!!
 

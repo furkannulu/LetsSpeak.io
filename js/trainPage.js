@@ -48,7 +48,6 @@ window.logout = () => {
 
 // ############################### Alıştırma Sayfaları ###############################
 
-
 async function setLevelStar(userLevel) {
   console.log("userlevel" + userLevel);
   try {
@@ -77,70 +76,66 @@ async function setLevelStar(userLevel) {
   }
 }
 async function getLevel() {
-    const auth = getAuth();
-    if (auth.currentUser) {
-      const username = auth.currentUser.email.split("@")[0];
-      const dbRef = ref(getDatabase());
-      try {
-        const snapshot = await get(child(dbRef, "users/" + username));
-        if (snapshot.exists()) {
-          const userLevel = snapshot.val().level;
-          await setLevelStar(userLevel);
-          return userLevel;
-        } else {
-          console.log("Data Not Found");
-          return 0;
-        }
-      } catch (error) {
-        console.error(error);
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const username = auth.currentUser.email.split("@")[0];
+    const dbRef = ref(getDatabase());
+    try {
+      const snapshot = await get(child(dbRef, "users/" + username));
+      if (snapshot.exists()) {
+        const userLevel = snapshot.val().level;
+        await setLevelStar(userLevel);
+        return userLevel;
+      } else {
+        console.log("Data Not Found");
+        return 0;
       }
-    } else {
-      console.log("User is not signed in");
-      return 0;
+    } catch (error) {
+      console.error(error);
     }
+  } else {
+    console.log("User is not signed in");
+    return 0;
   }
-  
+}
 
 async function setLevel(canJumpPoint) {
-    console.log("setLevel'e girdim");
-    getLevel().then(currentLevel => {
-      console.log("currentLevel bu " + currentLevel);
-  
-      try {
-        console.log(canJumpPoint);
-        if (canJumpPoint >= 85) {
-          if (currentLevel == "A1") {
-            currentLevel = "A2";
-          } else if (currentLevel == "A2") {
-            currentLevel = "B1";
-          } else if (currentLevel == "B1") {
-            currentLevel = "B2";
-          } else if (currentLevel == "C1") {
-            currentLevel = "C2";
-          } else if (currentLevel == "C2") {
-            currentLevel = "C2";
-          }
-          const auth = getAuth();
-          const username = auth.currentUser.email.split("@")[0];
-          const userCredential = get(child(ref(db), "users/" + username));
-          const user = userCredential.user;
-  
-          update(ref(db, "users/" + username), {
-            level: currentLevel,
-          });
+  console.log("setLevel'e girdim");
+  getLevel().then((currentLevel) => {
+    try {
+      console.log(canJumpPoint);
+      if (canJumpPoint >= 85) {
+        if (currentLevel == "A1") {
+          currentLevel = "A2";
+        } else if (currentLevel == "A2") {
+          currentLevel = "B1";
+        } else if (currentLevel == "B1") {
+          currentLevel = "B2";
+        } else if (currentLevel == "C1") {
+          currentLevel = "C2";
+        } else if (currentLevel == "C2") {
+          currentLevel = "C2";
         }
-        setLevelStar(currentLevel);
-        setTimeout(() => {
-            location.reload();
-          }, 5000); // 5 saniye
-      } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorCode + errorMessage);
+        const auth = getAuth();
+        const username = auth.currentUser.email.split("@")[0];
+        const userCredential = get(child(ref(db), "users/" + username));
+        const user = userCredential.user;
+
+        update(ref(db, "users/" + username), {
+          level: currentLevel,
+        });
       }
-    });
-  }
-  
+      setLevelStar(currentLevel);
+      setTimeout(() => {
+        location.reload();
+      }, 5000); // 5 saniye
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(errorCode + errorMessage);
+    }
+  });
+}
 
 async function updatePoint() {
   try {
@@ -203,6 +198,7 @@ import {
 // HTML ITEMS for Form Page
 const sentenceItemForm = document.getElementById("sentenceForm");
 const startButtonForm = document.getElementById("startForm");
+const nextButtonForm = document.getElementById("nextButton");
 const outputForm = document.getElementById("outputForm");
 const resultsForm = document.getElementById("resultsForm");
 const displayPointForm = document.getElementById("displayPointForm");
@@ -264,7 +260,10 @@ function getSentenceforTrainForm() {
     var average = totalPoint / formIndex;
     displayPointForm.textContent = Math.round(average);
     updatePoint();
-    return (sentencesForm = ["END..."]);
+    nextButtonForm.disabled = true;
+    return (sentencesForm = [
+      `Your point is  → ${Math.round(average)}. Please wait... `,
+    ]);
   }
   return 0;
 }
@@ -292,7 +291,8 @@ getLevel()
     } else if (userLevel == "A2") {
       counter = 0;
       querySnapshotA2.forEach((doc) => {
-        if (counter < 10) {
+        if (counter < 3) {
+          console.log(doc.data().sentence);
           sentencesForm.push(doc.data().sentence);
           sentencesA2.push(doc.data().sentence);
         } else {
@@ -365,8 +365,6 @@ getLevel()
     recognizer.lang = "en-US";
 
     startButtonForm.addEventListener("click", () => {
-      outputForm.value = "";
-      resultsForm.value = "";
       recognizer.start();
     });
 
@@ -374,6 +372,7 @@ getLevel()
       startTime = new Date().getTime(); // Kaydın başlama zamanını al
       console.log("Speech recognition service has started at : " + startTime);
       startButtonForm.disabled = true;
+      nextButtonForm.disabled = true;
     };
 
     recognition.onspeechstart = () => {
@@ -397,11 +396,19 @@ getLevel()
       endTime = new Date().getTime(); // Kaydın bitiş zamanını al
       console.log("Speech recognition service has stopped at : " + endTime);
       Correction();
-      startButtonForm.disabled = false;
+      nextButtonForm.disabled = false;
+      //
     };
 
     outputForm.addEventListener("click", () => {
       outputForm.blur();
+    });
+    nextButtonForm.addEventListener("click", () => {
+      outputForm.value = "";
+      resultsForm.value = "";
+      sentenceItemForm.textContent = getSentenceforTrainForm();
+      nextButtonForm.disabled = true;
+      startButtonForm.disabled = false;
     });
 
     // ############################### Puan Hesabı ve Accuracy Kısmı ###############################
@@ -498,7 +505,7 @@ getLevel()
 
       totalPoint += fluencyScore + wordScore;
 
-      sentenceItemForm.textContent = getSentenceforTrainForm();
+      // sentenceItemForm.textContent = getSentenceforTrainForm();
     }
 
     function wordAccuracyPoint(incorrectWords, correctWords) {
