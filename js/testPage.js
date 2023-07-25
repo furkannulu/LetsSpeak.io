@@ -399,7 +399,6 @@ function Correction() {
   resultsForm.value += "Akıcılık Puanı: " + fluencyScore + "\n";
 
   totalPoint += fluencyScore + wordScore;
-  // sentenceItemForm.textContent = getSentenceforTestForm();
 }
 
 function wordAccuracyPoint(incorrectWords, correctWords) {
